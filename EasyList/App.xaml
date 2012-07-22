@@ -8,8 +8,25 @@
 
     <!--Application Resources-->
     <Application.Resources>
-    </Application.Resources>
 
+        <shell:ApplicationBar x:Key="AppBar1" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1" Click="Button1_Click" />
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="MenuItem 1" Click="MenuItem1_Click" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+
+        <shell:ApplicationBar x:Key="AppBar2" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1" Click="Button1_Click" />
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2" Click="Button2_Click" />
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="MenuItem 1" Click="MenuItem1_Click" />
+                <shell:ApplicationBarMenuItem Text="MenuItem 2" Click="MenuItem2_Click" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+
+    </Application.Resources>
+    
     <Application.ApplicationLifetimeObjects>
         <!--Required object that handles lifetime events for the application-->
         <shell:PhoneApplicationService 

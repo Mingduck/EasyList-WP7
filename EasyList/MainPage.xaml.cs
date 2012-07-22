@@ -11,6 +11,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Data.Linq;
+using Microsoft.Phone.Shell;
 using EasyList.Models;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
@@ -27,11 +28,14 @@ namespace EasyList
 
         // Define an observable collection property that controls can bind to.
         private ObservableCollection<Settings> settingItems;
-
+        
         // Constructor
         public MainPage()
         {
             InitializeComponent();
+
+            // Set event listener for XAML Control with Name="Panorama".
+            Panorama.SelectionChanged += Panorama_SelectionChanged;
 
             // Connect to the database and instantiate data context.
             this.easyListDb = new EasyListContext(EasyListContext.DBConnectionString);
@@ -42,6 +46,19 @@ namespace EasyList
             // Set the data context of the listbox control to the sample data
             DataContext = App.ViewModel;
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
+        }
+
+        /**
+         * private Panorama_SelectionChanged
+         * 
+         * This function is called when the panorama view has changed. This allows us to take action when that happens.
+         * For instance to change the Application Bar to suit the needs of the new view.
+         * 
+         * return void.
+         */
+        private void Panorama_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            int index = Panorama.SelectedIndex;
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -55,7 +72,6 @@ namespace EasyList
 
             // Call the base method.
             base.OnNavigatedTo(e);
-
         }
 
         private void newToDoTextBox_GotFocus(object sender, RoutedEventArgs e)

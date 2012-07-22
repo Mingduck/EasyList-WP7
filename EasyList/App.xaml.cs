@@ -192,5 +192,33 @@ namespace EasyList
         }
 
         #endregion
+
+        #region Application bar handlers
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Button 1 works!");
+            //Do work for your application here.
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Button 2 works!");
+            //Do work for your application here.
+        }
+
+        private void MenuItem1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Menu item 1 works!");
+            //Do work for your application here.
+        }
+
+        private void MenuItem2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Menu item 2 works!");
+            //Do work for your application here.
+        }
+
+        #endregion
     }
 }
