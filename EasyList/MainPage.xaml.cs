@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Data.Linq;
 using EasyList.Models;
 using System.ComponentModel;
 using System.Collections.ObjectModel;

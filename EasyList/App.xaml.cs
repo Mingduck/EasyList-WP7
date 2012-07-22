@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using EasyList.Models;
+using Microsoft.Phone.Data.Linq;
 
 namespace EasyList
 {
@@ -79,13 +80,29 @@ namespace EasyList
             // Create the database if it does not exist.
             using (EasyListContext db = new EasyListContext(EasyListContext.DBConnectionString))
             {
-                if (db.DatabaseExists() == false)
+                if (!db.DatabaseExists())
                 {
                     // Create the database
                     db.CreateDatabase();
 
+                    var updater = db.CreateDatabaseSchemaUpdater();
+                    updater.DatabaseSchemaVersion = 1;
+                    updater.Execute();
+
                     // Save categories to the database.
-                    db.SubmitChanges();
+                    //db.SubmitChanges();
+                }
+                else
+                {
+                    //var updater = db.CreateDatabaseSchemaUpdater();
+                    //if (updater.DatabaseSchemaVersion < 2)
+                    //{
+                    //    // make some updates
+                    //    updater.AddTable<Settings>();
+                    //    updater.AddColumn<>("CreatedDate");
+                    //    updater.DatabaseSchemaVersion = 2;
+                    //    updater.Execute();
+                    //}
                 }
             }
         }
