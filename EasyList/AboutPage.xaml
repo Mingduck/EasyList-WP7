@@ -27,7 +27,11 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0"></Grid>
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <StackPanel x:Name="AboutText" Grid.Row="0" Margin="12,17,0,28">
+                <TextBlock x:Name="Line1" Text="EasyList for Windows Phone is created by Ming-Fai Wai and Willem Liu." TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 
 </phone:PhoneApplicationPage>
