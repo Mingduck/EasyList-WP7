@@ -16,119 +16,11 @@ using EasyList.Models.BaseModels;
 
 namespace EasyList.Models
 {
-    // Settings.
+    /// <summary>
+    /// The ListeItems table.
+    /// </summary>
     [Table]
-    public class Settings : EasyListTable
-    {
-        private string key;
-        private string value;
-
-        [Column(IsPrimaryKey = true, IsDbGenerated = true, DbType = "INT NOT NULL Identity", CanBeNull = false, AutoSync = AutoSync.OnInsert)]
-        public string Key
-        {
-            get
-            {
-                return key;
-            }
-            set
-            {
-                if (key != value)
-                {
-                    this.NotifyPropertyChanging("Key");
-                    this.key = value;
-                    this.NotifyPropertyChanged("Key");
-                }
-            }
-        }
-
-        [Column]
-        public string Value 
-        {
-            get 
-            {
-                return this.value;
-            }
-
-            set 
-            { 
-                if (this.value != value) 
-                {
-                    this.NotifyPropertyChanging("Value");
-                    this.value = value;
-                    this.NotifyPropertyChanged("Value");
-                }
-            }
-        }
-    }
-
-    // Lists.
-    [Table]
-    public class Lists : EasyListTable
-    {
-        private int id;
-        private string name;
-        private DateTime lastModified;
-
-        [Column(IsPrimaryKey = true, IsDbGenerated = true, DbType = "INT NOT NULL Identity", CanBeNull = false, AutoSync = AutoSync.OnInsert)]
-        public int Id
-        {
-            get
-            {
-                return id;
-            }
-            set
-            {
-                if (id != value)
-                {
-                    this.NotifyPropertyChanging("Id");
-                    this.id = value;
-                    this.NotifyPropertyChanged("Id");
-                }
-            }
-        }
-
-        [Column]
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-
-            set
-            {
-                if (this.name != value)
-                {
-                    this.NotifyPropertyChanging("Name");
-                    this.name = value;
-                    this.NotifyPropertyChanged("Name");
-                }
-            }
-        }
-
-        [Column]
-        public DateTime LastModified
-        {
-            get
-            {
-                return this.lastModified;
-            }
-
-            set
-            {
-                if (this.lastModified != value)
-                {
-                    this.NotifyPropertyChanging("LastModified");
-                    this.lastModified = value;
-                    this.NotifyPropertyChanged("LastModified");
-                }
-            }
-        }
-    }
-
-    // ListItems.
-    [Table]
-    public class ListItems : EasyListTable
+    public class ListItemsTable : EasyListTable
     {
         private int id;
         private int listId;
@@ -141,11 +33,11 @@ namespace EasyList.Models
         {
             get
             {
-                return id;
+                return this.id;
             }
             set
             {
-                if (id != value)
+                if (this.id != value)
                 {
                     this.NotifyPropertyChanging("Id");
                     this.id = value;

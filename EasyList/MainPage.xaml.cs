@@ -12,9 +12,13 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Data.Linq;
 using Microsoft.Phone.Shell;
-using EasyList.Models;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using EasyList.Models;
+using EasyList.Models.Interfaces;
+using EasyList.Models.BaseModels;
+using EasyList.ViewModels;
+using EasyList.ViewModels.Interfaces;
 
 namespace EasyList
 {
@@ -24,67 +28,82 @@ namespace EasyList
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Data context for the local database
-        private EasyListContext easyListDb;
+        private EasyListDataContext easyListDb;
 
         // Define an observable collection property that controls can bind to.
-        private ObservableCollection<Settings> settingItems;
+        private ObservableCollection<SettingsTable> settingItems;
         
         // Constructor
         public MainPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             // Set event listener for XAML Control with Name="Panorama".
-            Panorama.SelectionChanged += Panorama_SelectionChanged;
+            this.Panorama.SelectionChanged += this.Panorama_SelectionChanged;
 
             // Connect to the database and instantiate data context.
-            this.easyListDb = new EasyListContext(EasyListContext.DBConnectionString);
+            this.easyListDb = new EasyListDataContext(EasyListDataContext.DBConnectionString);
 
             // Data context and observable collection are children of the main page.
-            this.DataContext = this;
+            // Note: Ehhhhh, why we do this?
+            //this.DataContext = this;
 
-            // Set the data context of the listbox control to the sample data
-            DataContext = App.ViewModel;
+            // Set the data context of the listbox control to the App's default ViewModel.
+            var viewModel = new MainViewModel(this.easyListDb.GetSettings());
+            App.ViewModel = viewModel;
+            this.DataContext = App.ViewModel;
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
         }
 
-        /**
-         * private Panorama_SelectionChanged
-         * 
-         * This function is called when the panorama view has changed. This allows us to take action when that happens.
-         * For instance to change the Application Bar to suit the needs of the new view.
-         * 
-         * return void.
-         */
+        /// <summary>
+        /// This function is called when the panorama view has changed. This allows us to take action when that happens.
+        /// For instance to change the Application Bar to suit the needs of the new view.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// /// <param name="e">Event args.</param>
         private void Panorama_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            int index = Panorama.SelectedIndex;
+            int index = this.Panorama.SelectedIndex;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             // Define the query to gather all of the to-do items.
-            var settingItemsInDb =  from Settings settings in this.easyListDb.Settings
-                                    select settings;
+            var settingItemsInDb =  from    SettingsTable settings 
+                                    in      this.easyListDb.Settings
+                                    select  settings;
 
             // Execute the query and place the results into a collection.
-            this.SettingItems = new ObservableCollection<Settings>(settingItemsInDb);
+            this.SettingItems = new ObservableCollection<SettingsTable>(settingItemsInDb);
 
             // Call the base method.
             base.OnNavigatedTo(e);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void newToDoTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             // Clear the text box when it gets focus.
             //newToDoTextBox.Text = String.Empty;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
         private void insertSetting(string key)
         {
             // Create a new to-do item based on the text box.
             //var newSetting = new Settings { Key = key, Value = "Waarde" };
-            var newSetting = new Settings(); 
+            var newSetting = new SettingsTable(); 
             newSetting.Key = key;
             newSetting.Value = "Waarde";
 
@@ -95,11 +114,21 @@ namespace EasyList
             this.easyListDb.Settings.InsertOnSubmit(newSetting);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void newToDoAddButton_Click(object sender, RoutedEventArgs e)
         {
             this.insertSetting("");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void deleteTaskButton_Click(object sender, RoutedEventArgs e)
         {
             // Cast parameter as a button.
@@ -124,6 +153,10 @@ namespace EasyList
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
         {
             // Call the base method.
@@ -133,7 +166,11 @@ namespace EasyList
             this.easyListDb.SubmitChanges();
         }
 
-        // Load data for the ViewModel Items
+        /// <summary>
+        /// Load data for the ViewModel Items
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             if (!App.ViewModel.IsDataLoaded)
@@ -142,7 +179,10 @@ namespace EasyList
             }
         }
 
-        // Used to notify Silverlight that a property has changed.
+        /// <summary>
+        /// Used to notify Silverlight that a property has changed.
+        /// </summary>
+        /// <param name="propertyName"></param>
         private void NotifyPropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)
@@ -150,8 +190,11 @@ namespace EasyList
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        
-        public ObservableCollection<Settings> SettingItems
+ 
+        /// <summary>
+        /// 
+        /// </summary>
+        public ObservableCollection<SettingsTable> SettingItems
         {
             get
             {

@@ -13,46 +13,40 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using EasyList.Models;
+using EasyList.Models.Interfaces;
+using EasyList.Models.BaseModels;
+using EasyList.ViewModels;
+using EasyList.ViewModels.Interfaces;
 
-namespace EasyList
+namespace EasyList.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : IMainViewModel
     {
-        public MainViewModel()
-        {
-            this.Items = new ObservableCollection<ListItems>();
-        }
+        /// <summary>
+        /// An observable collection for Settings-objects.
+        /// </summary>
+        public ObservableCollection<IEasyListTable> Items { get; private set; }
 
         /// <summary>
-        /// A collection for Settings objects.
+        /// A value to indicate whether all data has been loaded.
         /// </summary>
-        public ObservableCollection<ListItems> Items { get; private set; }
-
-        private string _sampleProperty = "Sample Runtime Property Value";
-        /// <summary>
-        /// Sample ViewModel property; this property is used in the view to display its value using a Binding
-        /// </summary>
-        /// <returns></returns>
-        public string SampleProperty
-        {
-            get
-            {
-                return _sampleProperty;
-            }
-            set
-            {
-                if (value != _sampleProperty)
-                {
-                    _sampleProperty = value;
-                    NotifyPropertyChanged("SampleProperty");
-                }
-            }
-        }
-
         public bool IsDataLoaded
         {
             get;
             private set;
+        }
+
+        /// /// <summary>
+        /// Event handler to handling of a property change.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public MainViewModel(ObservableCollection<IEasyListTable> dataItems)
+        {
+            this.Items = dataItems;
         }
 
         /// <summary>
@@ -60,8 +54,8 @@ namespace EasyList
         /// </summary>
         public void LoadData()
         {
-            this.Items.Add(new ListItems { Id = 1, LastModified = DateTime.Now, ListId = 1, Selected = false, Value = "hoi."});
-            this.Items.Add(new ListItems { Id = 2, LastModified = DateTime.Now, ListId = 5, Selected = true, Value = "hoiyoooow." });
+            this.Items.Add(new ListItemsTable { Id = 1, LastModified = DateTime.Now, ListId = 1, Selected = false, Value = "hoi."});
+            this.Items.Add(new ListItemsTable { Id = 2, LastModified = DateTime.Now, ListId = 5, Selected = true, Value = "hoiyoooow." });
 
             // Sample data; replace with real data
             //this.Items.Add(new ItemViewModel() { LineOne = "runtime one", LineTwo = "Maecenas praesent accumsan bibendum", LineThree = "Facilisi faucibus habitant inceptos interdum lobortis nascetur pharetra placerat pulvinar sagittis senectus sociosqu" });
@@ -69,11 +63,14 @@ namespace EasyList
             this.IsDataLoaded = true;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// Set the property that has been changed.
+        /// </summary>
+        /// <param name="propertyName">The name of property that has been changed.</param>
         private void NotifyPropertyChanged(String propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
+            var handler = this.PropertyChanged;
+            if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }

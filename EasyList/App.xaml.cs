@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -12,8 +13,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using EasyList.Models;
 using Microsoft.Phone.Data.Linq;
+using EasyList.Models;
+using EasyList.Models.Interfaces;
+using EasyList.Models.BaseModels;
+using EasyList.ViewModels;
 
 namespace EasyList
 {
@@ -29,11 +33,18 @@ namespace EasyList
         {
             get
             {
-                // Delay creation of the view model until necessary
+                // Delay creation of the view model until necessary.
                 if (viewModel == null)
-                    viewModel = new MainViewModel();
+                {
+                    viewModel = new MainViewModel(new ObservableCollection<IEasyListTable>());
+                }
 
                 return viewModel;
+            }
+
+            set 
+            {
+                viewModel = value;
             }
         }
 
@@ -78,7 +89,7 @@ namespace EasyList
             }
 
             // Create the database if it does not exist.
-            using (EasyListContext db = new EasyListContext(EasyListContext.DBConnectionString))
+            using (EasyListDataContext db = new EasyListDataContext(EasyListDataContext.DBConnectionString))
             {
                 if (!db.DatabaseExists())
                 {
