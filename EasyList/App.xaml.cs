@@ -206,16 +206,28 @@ namespace EasyList
 
         #region Application bar handlers
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void AddList_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Button 1 works!");
+            MessageBox.Show("Add List works!");
             //Do work for your application here.
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void EditListItems_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Button 2 works!");
+            MessageBox.Show("Edit works!");
             //Do work for your application here.
+        }
+
+        private void DeleteListItems_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure?", "Delete Selected Item(s)", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                MessageBox.Show("Deleted");
+            }
+            else 
+            {
+                MessageBox.Show("Delete cancelled");
+            }
         }
 
         private void MenuItem1_Click(object sender, EventArgs e)
@@ -228,6 +240,11 @@ namespace EasyList
         {
             MessageBox.Show("Menu item 2 works!");
             //Do work for your application here.
+        }
+
+        private void MenuAbout_Click(object sender, EventArgs e)
+        {
+            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri("/EasyList;component/Aboutpage.xaml", UriKind.Relative));
         }
 
         #endregion

@@ -32,7 +32,13 @@ namespace EasyList
 
         // Define an observable collection property that controls can bind to.
         private ObservableCollection<SettingsTable> settingItems;
-        
+
+        ApplicationBar bar1 = ((ApplicationBar)Application.Current.Resources["AppBar1"]);
+
+        ApplicationBar bar2 = ((ApplicationBar)Application.Current.Resources["AppBar2"]);
+
+        ApplicationBar bar3 = ((ApplicationBar)Application.Current.Resources["AppBar3"]);
+
         // Constructor
         public MainPage()
         {
@@ -64,6 +70,25 @@ namespace EasyList
         private void Panorama_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             int index = this.Panorama.SelectedIndex;
+            bar1.IsVisible = false;
+            bar2.IsVisible = false;
+            bar3.IsVisible = false;
+            switch (index)
+            {
+                case 0:
+                    ApplicationBar = bar1;
+                    bar1.Mode = ApplicationBarMode.Default;
+                    break;
+                case 1:
+                    ApplicationBar = bar2;
+                    bar2.Mode = ApplicationBarMode.Default;
+                    break;
+                case 2:
+                    ApplicationBar = bar3;
+                    ApplicationBar.Mode = ApplicationBarMode.Minimized;
+                    break;
+            }
+            ApplicationBar.IsVisible = true;
         }
 
         /// <summary>
