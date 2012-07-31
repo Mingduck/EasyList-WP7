@@ -13,7 +13,6 @@ using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using EasyList.Models.Interfaces;
 using EasyList.Models.BaseModels;
 using EasyList.Models;
 
@@ -37,20 +36,5 @@ namespace EasyList.Models
 
         // Specify a single table for the ListItems items.
         public Table<ListItemsTable> ListItems;
-
-        /// <summary>
-        /// Get all content from  the Settings-table as an ObservableCollection.
-        /// </summary>
-        /// <returns>
-        /// An Observable collection of SettingsTable objects.
-        /// </returns>
-        public ObservableCollection<SettingsTable> GetSettings()
-        {
-            var settingsInDb = from     SettingsTable settings
-                               in       this.Settings
-                               select   settings;
-
-            return new ObservableCollection<SettingsTable>(settingsInDb);
-        }
     }
 }

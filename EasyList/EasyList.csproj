@@ -72,9 +72,8 @@
     <Compile Include="Models\BaseModels\EasyListTable.cs" />
     <Compile Include="Models\ListItemsTable.cs" />
     <Compile Include="Models\ListsTable.cs" />
-    <Compile Include="Models\EasyListContext.cs" />
+    <Compile Include="Models\EasyListDataContext.cs" />
     <Compile Include="Models\SettingsTable.cs" />
-    <Compile Include="Models\Interfaces\IEasyListTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\Interfaces\IMainViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />

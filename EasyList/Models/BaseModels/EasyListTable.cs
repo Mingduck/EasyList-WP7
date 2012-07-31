@@ -12,12 +12,11 @@ using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using EasyList.Models.Interfaces;
 
 namespace EasyList.Models.BaseModels
-{   
+{
     [Table]
-    public class EasyListTable : IEasyListTable
+    public class EasyListTable : INotifyPropertyChanged, INotifyPropertyChanging
     {
         /// <summary>
         /// Event handler to handle the change of a property.
@@ -35,14 +34,10 @@ namespace EasyList.Models.BaseModels
         /// <param name="propertyName">The name of the property.</param>
         protected void NotifyPropertyChanged(string propertyName)
         {
-            #region INotifyPropertyChanged method
-
             if (this.PropertyChanged != null)
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-
-            #endregion
         }
 
         /// <summary>
@@ -51,14 +46,10 @@ namespace EasyList.Models.BaseModels
         /// <param name="propertyName">The name of the property.</param>
         protected void NotifyPropertyChanging(string propertyName)
         {
-            #region INotifyPropertyChanging method
-
             if (this.PropertyChanging != null)
             {
                 this.PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
             }
-
-            #endregion
         }        
     }
 }

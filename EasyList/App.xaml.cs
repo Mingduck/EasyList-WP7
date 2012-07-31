@@ -15,7 +15,6 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Data.Linq;
 using EasyList.Models;
-using EasyList.Models.Interfaces;
 using EasyList.Models.BaseModels;
 using EasyList.ViewModels;
 
@@ -36,7 +35,7 @@ namespace EasyList
                 // Delay creation of the view model until necessary.
                 if (viewModel == null)
                 {
-                    viewModel = new MainViewModel(new ObservableCollection<IEasyListTable>());
+                    viewModel = new MainViewModel();
                 }
 
                 return viewModel;
@@ -101,7 +100,7 @@ namespace EasyList
                     updater.Execute();
 
                     // Save categories to the database.
-                    //db.SubmitChanges();
+                    db.SubmitChanges();
                 }
                 else
                 {
@@ -131,7 +130,7 @@ namespace EasyList
             // Ensure that application state is restored appropriately
             if (!App.ViewModel.IsDataLoaded)
             {
-                App.ViewModel.LoadData();
+                App.ViewModel.LoadData(new EasyListDataContext(EasyListDataContext.DBConnectionString));
             }
         }
 

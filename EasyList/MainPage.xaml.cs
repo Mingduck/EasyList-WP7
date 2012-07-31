@@ -15,7 +15,6 @@ using Microsoft.Phone.Shell;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using EasyList.Models;
-using EasyList.Models.Interfaces;
 using EasyList.Models.BaseModels;
 using EasyList.ViewModels;
 using EasyList.ViewModels.Interfaces;
@@ -24,20 +23,102 @@ namespace EasyList
 {
     public partial class MainPage : PhoneApplicationPage, INotifyPropertyChanged
     {
-        // Event used to indicate whether any properties were changed or not.
+        /// <summary>
+        /// Event used to indicate whether any properties were changed or not.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // Data context for the local database
+        /// <summary>
+        /// Data context for the local database.
+        /// </summary>
         private EasyListDataContext easyListDb;
 
-        // Define an observable collection property that controls can bind to.
-        private ObservableCollection<SettingsTable> settingItems;
+        /// <summary>
+        /// 
+        /// </summary>
+        private ObservableCollection<SettingsTable> settings;
 
-        ApplicationBar bar1 = ((ApplicationBar)Application.Current.Resources["AppBar1"]);
+        /// <summary>
+        /// 
+        /// </summary>
+        private ObservableCollection<ListsTable> lists;
 
-        ApplicationBar bar2 = ((ApplicationBar)Application.Current.Resources["AppBar2"]);
+        /// <summary>
+        /// 
+        /// </summary>
+        private ObservableCollection<ListItemsTable> listItems;
 
-        ApplicationBar bar3 = ((ApplicationBar)Application.Current.Resources["AppBar3"]);
+        /// <summary>
+        /// 
+        /// </summary>
+        public ObservableCollection<SettingsTable> Settings
+        {
+            get
+            {
+                return this.settings;
+            }
+            set
+            {
+                if (this.settings != value)
+                {
+                    this.settings = value;
+                    this.NotifyPropertyChanged("Settings");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ObservableCollection<ListsTable> Lists
+        {
+            get
+            {
+                return this.lists;
+            }
+            set
+            {
+                if (this.lists != value)
+                {
+                    this.lists = value;
+                    this.NotifyPropertyChanged("Lists");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ObservableCollection<ListItemsTable> ListItems
+        {
+            get
+            {
+                return this.listItems;
+            }
+            set
+            {
+                if (this.listItems != value)
+                {
+                    this.listItems = value;
+                    this.NotifyPropertyChanged("ListItems");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ApplicationBar Bar1 = ((ApplicationBar)Application.Current.Resources["AppBar1"]);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ApplicationBar Bar2 = ((ApplicationBar)Application.Current.Resources["AppBar2"]);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ApplicationBar Bar3 = ((ApplicationBar)Application.Current.Resources["AppBar3"]);
 
         // Constructor
         public MainPage()
@@ -55,8 +136,6 @@ namespace EasyList
             //this.DataContext = this;
 
             // Set the data context of the listbox control to the App's default ViewModel.
-            var viewModel = new MainViewModel(this.easyListDb.GetSettings());
-            App.ViewModel = viewModel;
             this.DataContext = App.ViewModel;
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
         }
@@ -69,26 +148,28 @@ namespace EasyList
         /// /// <param name="e">Event args.</param>
         private void Panorama_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            int index = this.Panorama.SelectedIndex;
-            bar1.IsVisible = false;
-            bar2.IsVisible = false;
-            bar3.IsVisible = false;
+            var index = this.Panorama.SelectedIndex;
+            this.Bar1.IsVisible = false;
+            this.Bar2.IsVisible = false;
+            this.Bar3.IsVisible = false;
+
             switch (index)
             {
                 case 0:
-                    ApplicationBar = bar1;
-                    bar1.Mode = ApplicationBarMode.Default;
+                    this.ApplicationBar = this.Bar1;
+                    this.Bar1.Mode = ApplicationBarMode.Default;
                     break;
                 case 1:
-                    ApplicationBar = bar2;
-                    bar2.Mode = ApplicationBarMode.Default;
+                    this.ApplicationBar = this.Bar2;
+                    this.Bar2.Mode = ApplicationBarMode.Default;
                     break;
                 case 2:
-                    ApplicationBar = bar3;
-                    ApplicationBar.Mode = ApplicationBarMode.Minimized;
+                    this.ApplicationBar = Bar3;
+                    this.ApplicationBar.Mode = ApplicationBarMode.Minimized;
                     break;
             }
-            ApplicationBar.IsVisible = true;
+
+            this.ApplicationBar.IsVisible = true;
         }
 
         /// <summary>
@@ -103,7 +184,7 @@ namespace EasyList
                                     select  settings;
 
             // Execute the query and place the results into a collection.
-            this.SettingItems = new ObservableCollection<SettingsTable>(settingItemsInDb);
+            this.Settings = new ObservableCollection<SettingsTable>(settingItemsInDb);
 
             // Call the base method.
             base.OnNavigatedTo(e);
@@ -133,7 +214,7 @@ namespace EasyList
             newSetting.Value = "Waarde";
 
             // Add a to-do item to the observable collection.
-            this.SettingItems.Add(newSetting);
+            this.Settings.Add(newSetting);
 
             // Add a to-do item to the local database.
             this.easyListDb.Settings.InsertOnSubmit(newSetting);
@@ -200,7 +281,11 @@ namespace EasyList
         {
             if (!App.ViewModel.IsDataLoaded)
             {
-                App.ViewModel.LoadData();
+                App.ViewModel.LoadData(this.easyListDb);
+
+                this.settings = App.ViewModel.Settings;
+                this.lists = App.ViewModel.Lists;
+                this.listItems = App.ViewModel.ListItems;
             }
         }
 
@@ -213,25 +298,6 @@ namespace EasyList
             if (this.PropertyChanged != null)
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
- 
-        /// <summary>
-        /// 
-        /// </summary>
-        public ObservableCollection<SettingsTable> SettingItems
-        {
-            get
-            {
-                return this.settingItems;
-            }
-            set
-            {
-                if (this.settingItems != value)
-                {
-                    this.settingItems = value;
-                    this.NotifyPropertyChanged("SettingItems");
-                }
             }
         }
     }
