@@ -158,14 +158,22 @@ namespace EasyList
                 case 0:
                     this.ApplicationBar = this.Bar1;
                     this.Bar1.Mode = ApplicationBarMode.Default;
+
+                    //this.Panorama.ItemsSource = this.Lists;
                     break;
                 case 1:
                     this.ApplicationBar = this.Bar2;
                     this.Bar2.Mode = ApplicationBarMode.Default;
+                    
+                    //this.Panorama.ItemsSource = this.ListItems;
                     break;
                 case 2:
-                    this.ApplicationBar = Bar3;
+                    this.ApplicationBar = this.Bar3;
                     this.ApplicationBar.Mode = ApplicationBarMode.Minimized;
+
+                    var x = Panorama.Items[0];
+                    this.SettingsListBox.ItemsSource = this.Settings;
+                    
                     break;
             }
 
@@ -214,10 +222,40 @@ namespace EasyList
             newSetting.Value = value;
 
             // Add a to-do item to the observable collection.
-            this.Settings.Add(newSetting);
+            //this.Settings.Add(newSetting);
+            //this.easyListDb.Settings.InsertOnSubmit(newSetting);
 
-            // Add a to-do item to the local database.
-            this.easyListDb.Settings.InsertOnSubmit(newSetting);
+            var newList = new ListsTable();
+            newList.Id = 1;
+            newList.LastModified = DateTime.Now;
+            newList.Name = "Da list...";
+            //this.Lists.Add(newList);
+            //this.easyListDb.Lists.InsertOnSubmit(newList);
+
+            newList = new ListsTable();
+            newList.Id = 2;
+            newList.LastModified = DateTime.Now;
+            newList.Name = "Da list222...";
+            //this.Lists.Add(newList);
+            //this.easyListDb.Lists.InsertOnSubmit(newList);
+
+            var item = new ListItemsTable();
+            item.Id = 1;
+            item.LastModified = DateTime.Now;
+            item.ListId = 1;
+            item.Selected = false;
+            item.Value = "Dikke waarde!";
+            //this.listItems.Add(item);
+            //this.easyListDb.ListItems.InsertOnSubmit(item);
+
+            item = new ListItemsTable();
+            item.Id = 2;
+            item.LastModified = DateTime.Now;
+            item.ListId = 2;
+            item.Selected = true;
+            item.Value = "Dikke waardezzz2222!";
+            //this.listItems.Add(item);
+            //this.easyListDb.ListItems.InsertOnSubmit(item);
         }
 
         /// <summary>
@@ -268,8 +306,7 @@ namespace EasyList
             // Call the base method.
             base.OnNavigatedFrom(e);
 
-            //this.insertSetting("10", "jajaajajaj jkakaja jaa");
-            //this.insertSetting("11", "asjh alkjsad hgu");
+            this.insertSetting("17", "lolsa args aasdas");
 
             var x = from SettingsTable tab in this.settings select tab;
 

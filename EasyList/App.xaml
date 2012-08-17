@@ -32,7 +32,7 @@
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
 
-        <c:SettingsTable x:Key="settingsTable"/>
+        <c:SettingsTable x:Key="SettingsTable"/>
         
     </Application.Resources>
     
