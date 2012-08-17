@@ -180,7 +180,8 @@ namespace EasyList
 
             // Create the frame but don't set it as RootVisual yet; this allows the splash
             // screen to remain active until the application is ready to render.
-            RootFrame = new PhoneApplicationFrame();
+            //RootFrame = new PhoneApplicationFrame();
+            RootFrame = new TransitionFrame();
             RootFrame.Navigated += CompleteInitializePhoneApplication;
 
             // Handle navigation failures
@@ -207,8 +208,7 @@ namespace EasyList
 
         private void AddList_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Add List works!");
-            //Do work for your application here.
+            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri("/EasyList;component/AddListpage.xaml", UriKind.Relative));
         }
 
         private void EditListItems_Click(object sender, EventArgs e)
