@@ -21,7 +21,7 @@ namespace EasyList.Models
     public class EasyListDataContext : DataContext
     {
         // Specify the connection string as a static, used in main page and app.xaml.
-        public static string DBConnectionString = "Data Source=isostore:/EasyListDatabase.sdf";
+        public static string DBConnectionString = "Data Source=isostore:/EasyListDatabase2.sdf";
 
         // Pass the connection string to the base class.
         public EasyListDataContext(string connectionString)

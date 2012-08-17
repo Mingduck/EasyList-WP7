@@ -178,13 +178,13 @@ namespace EasyList
         /// <param name="e"></param>
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            // Define the query to gather all of the to-do items.
-            var settingItemsInDb =  from    SettingsTable settings 
-                                    in      this.easyListDb.Settings
-                                    select  settings;
+            //// Define the query to gather all of the to-do items.
+            //var settingItemsInDb =  from    SettingsTable settings 
+            //                        in      this.easyListDb.Settings
+            //                        select  settings;
 
-            // Execute the query and place the results into a collection.
-            this.Settings = new ObservableCollection<SettingsTable>(settingItemsInDb);
+            //// Execute the query and place the results into a collection.
+            //this.Settings = new ObservableCollection<SettingsTable>(settingItemsInDb);
 
             // Call the base method.
             base.OnNavigatedTo(e);
@@ -205,13 +205,13 @@ namespace EasyList
         /// 
         /// </summary>
         /// <param name="key"></param>
-        private void insertSetting(string key)
+        private void insertSetting(string key, string value)
         {
             // Create a new to-do item based on the text box.
             //var newSetting = new Settings { Key = key, Value = "Waarde" };
             var newSetting = new SettingsTable(); 
             newSetting.Key = key;
-            newSetting.Value = "Waarde";
+            newSetting.Value = value;
 
             // Add a to-do item to the observable collection.
             this.Settings.Add(newSetting);
@@ -227,7 +227,7 @@ namespace EasyList
         /// <param name="e"></param>
         private void newToDoAddButton_Click(object sender, RoutedEventArgs e)
         {
-            this.insertSetting("");
+            this.insertSetting("", "");
         }
 
         /// <summary>
@@ -267,6 +267,11 @@ namespace EasyList
         {
             // Call the base method.
             base.OnNavigatedFrom(e);
+
+            //this.insertSetting("10", "jajaajajaj jkakaja jaa");
+            //this.insertSetting("11", "asjh alkjsad hgu");
+
+            var x = from SettingsTable tab in this.settings select tab;
 
             // Save changes to the database.
             this.easyListDb.SubmitChanges();
