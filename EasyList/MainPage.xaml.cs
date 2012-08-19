@@ -132,11 +132,7 @@ namespace EasyList
             this.easyListDb = new EasyListDataContext(EasyListDataContext.DBConnectionString);
 
             // Data context and observable collection are children of the main page.
-            // Note: Ehhhhh, why we do this?
-            //this.DataContext = this;
-
-            // Set the data context of the listbox control to the App's default ViewModel.
-            this.DataContext = App.ViewModel;
+            this.DataContext = this;
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
         }
 
@@ -158,21 +154,16 @@ namespace EasyList
                 case 0:
                     this.ApplicationBar = this.Bar1;
                     this.Bar1.Mode = ApplicationBarMode.Default;
-
-                    //this.Panorama.ItemsSource = this.Lists;
+                    
                     break;
                 case 1:
                     this.ApplicationBar = this.Bar2;
                     this.Bar2.Mode = ApplicationBarMode.Default;
                     
-                    //this.Panorama.ItemsSource = this.ListItems;
                     break;
                 case 2:
                     this.ApplicationBar = this.Bar3;
                     this.ApplicationBar.Mode = ApplicationBarMode.Minimized;
-
-                    var x = Panorama.Items[0];
-                    this.SettingsListBox.ItemsSource = this.Settings;
                     
                     break;
             }
@@ -213,49 +204,51 @@ namespace EasyList
         /// 
         /// </summary>
         /// <param name="key"></param>
-        private void insertSetting(string key, string value)
+        private void insertSetting(string key, string value, bool doInsert)
         {
-            // Create a new to-do item based on the text box.
-            //var newSetting = new Settings { Key = key, Value = "Waarde" };
-            var newSetting = new SettingsTable(); 
-            newSetting.Key = key;
-            newSetting.Value = value;
+            // Create a bunch of test-data.
+            if (doInsert)
+            {
+                var newSetting = new SettingsTable();
+                newSetting.Key = key;
+                newSetting.Value = value;
 
-            // Add a to-do item to the observable collection.
-            //this.Settings.Add(newSetting);
-            //this.easyListDb.Settings.InsertOnSubmit(newSetting);
+                // Add a to-do item to the observable collection.
+                this.Settings.Add(newSetting);
+                this.easyListDb.Settings.InsertOnSubmit(newSetting);
 
-            var newList = new ListsTable();
-            newList.Id = 1;
-            newList.LastModified = DateTime.Now;
-            newList.Name = "Da list...";
-            //this.Lists.Add(newList);
-            //this.easyListDb.Lists.InsertOnSubmit(newList);
+                var newList = new ListsTable();
+                newList.Id = 1;
+                newList.LastModified = DateTime.Now;
+                newList.Name = "Da list...";
+                this.Lists.Add(newList);
+                this.easyListDb.Lists.InsertOnSubmit(newList);
 
-            newList = new ListsTable();
-            newList.Id = 2;
-            newList.LastModified = DateTime.Now;
-            newList.Name = "Da list222...";
-            //this.Lists.Add(newList);
-            //this.easyListDb.Lists.InsertOnSubmit(newList);
+                newList = new ListsTable();
+                newList.Id = 2;
+                newList.LastModified = DateTime.Now;
+                newList.Name = "Da list222...";
+                this.Lists.Add(newList);
+                this.easyListDb.Lists.InsertOnSubmit(newList);
 
-            var item = new ListItemsTable();
-            item.Id = 1;
-            item.LastModified = DateTime.Now;
-            item.ListId = 1;
-            item.Selected = false;
-            item.Value = "Dikke waarde!";
-            //this.listItems.Add(item);
-            //this.easyListDb.ListItems.InsertOnSubmit(item);
+                var item = new ListItemsTable();
+                item.Id = 1;
+                item.LastModified = DateTime.Now;
+                item.ListId = 1;
+                item.Selected = false;
+                item.Value = "Dikke waarde!";
+                this.listItems.Add(item);
+                this.easyListDb.ListItems.InsertOnSubmit(item);
 
-            item = new ListItemsTable();
-            item.Id = 2;
-            item.LastModified = DateTime.Now;
-            item.ListId = 2;
-            item.Selected = true;
-            item.Value = "Dikke waardezzz2222!";
-            //this.listItems.Add(item);
-            //this.easyListDb.ListItems.InsertOnSubmit(item);
+                item = new ListItemsTable();
+                item.Id = 2;
+                item.LastModified = DateTime.Now;
+                item.ListId = 2;
+                item.Selected = true;
+                item.Value = "Dikke waardezzz2222!";
+                this.listItems.Add(item);
+                this.easyListDb.ListItems.InsertOnSubmit(item);
+            }
         }
 
         /// <summary>
@@ -265,7 +258,7 @@ namespace EasyList
         /// <param name="e"></param>
         private void newToDoAddButton_Click(object sender, RoutedEventArgs e)
         {
-            this.insertSetting("", "");
+            //this.insertSetting("", "");
         }
 
         /// <summary>
@@ -306,9 +299,7 @@ namespace EasyList
             // Call the base method.
             base.OnNavigatedFrom(e);
 
-            this.insertSetting("17", "lolsa args aasdas");
-
-            var x = from SettingsTable tab in this.settings select tab;
+            this.insertSetting("17", "lolsa args aasdas", false);
 
             // Save changes to the database.
             this.easyListDb.SubmitChanges();
@@ -323,11 +314,19 @@ namespace EasyList
         {
             if (!App.ViewModel.IsDataLoaded)
             {
+                // Populate the viewmodel's collections.
                 App.ViewModel.LoadData(this.easyListDb);
 
+                // Set a reference to the viewmodel's collections.
                 this.settings = App.ViewModel.Settings;
                 this.lists = App.ViewModel.Lists;
                 this.listItems = App.ViewModel.ListItems;
+
+               // Set the itemsources of the three listboxes.
+                // Todo: try to do this in XAML instead of here. At this moment, I can't get it to work in XAML.
+                this.ListsListBox.ItemsSource = this.Lists;
+                this.ListItemsListBox.ItemsSource = this.ListItems;
+                this.SettingsListBox.ItemsSource = this.Settings;
             }
         }
 

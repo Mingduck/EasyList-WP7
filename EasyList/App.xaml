@@ -31,9 +31,6 @@
                 <shell:ApplicationBarMenuItem Text="About" Click="MenuAbout_Click" />
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
-
-        <c:SettingsTable x:Key="SettingsTable"/>
-        
     </Application.Resources>
     
     <Application.ApplicationLifetimeObjects>
